@@ -20,6 +20,8 @@ require (
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
 	golang.org/x/sys v0.0.0-20210608053332-aa57babbf139 // indirect
 	golang.org/x/tools v0.1.2 // indirect
+	gorm.io/driver/mysql v1.1.0
+	gorm.io/gorm v1.21.10
 )
 
 go 1.16
