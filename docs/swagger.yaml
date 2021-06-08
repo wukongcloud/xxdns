@@ -1,0 +1,186 @@
+definitions:
+  controllers.domainResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Domain'
+        type: array
+      error:
+        type: string
+    type: object
+  controllers.healthResponse:
+    type: object
+  controllers.viewResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.View'
+        type: array
+      error:
+        type: string
+    type: object
+  models.Domain:
+    properties:
+      comment:
+        type: string
+      contract:
+        type: string
+      expire:
+        type: string
+      mininum:
+        type: string
+      name:
+        type: string
+      provider:
+        type: string
+      refresh:
+        type: string
+      retry:
+        type: string
+      serial:
+        type: string
+      ttl:
+        type: string
+      type:
+        type: string
+    required:
+    - comment
+    - contract
+    - expire
+    - mininum
+    - name
+    - provider
+    - refresh
+    - retry
+    - serial
+    - ttl
+    - type
+    type: object
+  models.View:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    required:
+    - email
+    - name
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/domains:
+    get:
+      consumes:
+      - application/json
+      description: Get all domains
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.domainResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.domainResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.domainResponse'
+      summary: Get all domains
+      tags:
+      - Domain
+  /api/v1/records:
+    get:
+      consumes:
+      - application/json
+      description: Get all records
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.viewResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.viewResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.viewResponse'
+      summary: Get all records
+      tags:
+      - Record
+  /api/v1/views:
+    get:
+      consumes:
+      - application/json
+      description: Get all views
+      parameters:
+      - description: keyword
+        in: query
+        name: search
+        type: string
+      - description: auth header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.viewResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.viewResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.viewResponse'
+      summary: Get all views
+      tags:
+      - View
+  /healthz:
+    get:
+      consumes:
+      - application/json
+      description: Get health status
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.healthResponse'
+            - properties:
+                status:
+                  type: string
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.healthResponse'
+            - properties:
+                error:
+                  type: string
+                status:
+                  type: string
+              type: object
+      summary: Get health status
+      tags:
+      - Health
+swagger: "2.0"
