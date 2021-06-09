@@ -1,25 +1,23 @@
 package models
 
 import (
-"fmt"
-"gorm.io/driver/mysql"
-"gorm.io/gorm"
-"gorm.io/gorm/schema"
-"os"
-
-"time"
+	"fmt"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
+	"os"
+	"time"
 )
 
 //
 var db *gorm.DB
 var err error
 
-func InitDb (){
-	sql := fmt.Sprintf("root:abc123@(127.0.0.1:3306)/xxdns?charset=utf8&parseTime=True&loc=Local")
-
-	db, err = gorm.Open(mysql.Open(sql),&gorm.Config{
+func InitDb() {
+	sql := fmt.Sprintf("root:root@(127.0.0.1:3306)/xxdns?charset=utf8&parseTime=True&loc=Local")
+	db, err = gorm.Open(mysql.Open(sql), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
-		SkipDefaultTransaction: true,
+		SkipDefaultTransaction:                   true,
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -32,8 +30,9 @@ func InitDb (){
 
 	// 迁移数据表，在没有数据表结构变更时候，建议注释不执行
 	//_ = db.AutoMigrate(&Article{},&Category{},&User{})
+	_ = db.AutoMigrate(&View{})
 
-	sqlDB,_ := db.DB()
+	sqlDB, _ := db.DB()
 
 	// SetMaxIdleCons 设置连接池中的最大闲置连接数。
 	sqlDB.SetMaxIdleConns(10)
@@ -43,6 +42,5 @@ func InitDb (){
 
 	// SetConnMaxLifetiment 设置连接的最大可复用时间。
 	sqlDB.SetConnMaxLifetime(10 * time.Second)
-
 
 }

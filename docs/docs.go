@@ -24,76 +24,6 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/domains": {
-            "get": {
-                "description": "Get all domains",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Domain"
-                ],
-                "summary": "Get all domains",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.domainResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.domainResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.domainResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/records": {
-            "get": {
-                "description": "Get all records",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Record"
-                ],
-                "summary": "Get all records",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.viewResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.viewResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/controllers.viewResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/views": {
             "get": {
                 "description": "Get all views",
@@ -110,35 +40,99 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "keyword",
-                        "name": "search",
+                        "description": "pagesize",
+                        "name": "pagesize",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "auth header",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                        "description": "pagenum",
+                        "name": "pagenum",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.viewResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.View"
+                            }
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/controllers.viewResponse"
+                            "$ref": "#/definitions/controllers.errResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/controllers.viewResponse"
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a views",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "View"
+                ],
+                "summary": "Create a views",
+                "parameters": [
+                    {
+                        "description": "填写视图信息",
+                        "name": "viewInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.viewCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.viewObject"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
                         }
                     }
                 }
@@ -202,19 +196,13 @@ var doc = `{
         }
     },
     "definitions": {
-        "controllers.domainResponse": {
+        "controllers.errResponse": {
             "type": "object",
             "properties": {
                 "code": {
                     "type": "integer"
                 },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Domain"
-                    }
-                },
-                "error": {
+                "message": {
                     "type": "string"
                 }
             }
@@ -222,70 +210,41 @@ var doc = `{
         "controllers.healthResponse": {
             "type": "object"
         },
-        "controllers.viewResponse": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.View"
-                    }
-                },
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Domain": {
+        "controllers.viewCreateForm": {
             "type": "object",
             "required": [
                 "comment",
-                "contract",
-                "expire",
-                "mininum",
-                "name",
-                "provider",
-                "refresh",
-                "retry",
-                "serial",
-                "ttl",
-                "type"
+                "name"
             ],
             "properties": {
                 "comment": {
                     "type": "string"
                 },
-                "contract": {
-                    "type": "string"
-                },
-                "expire": {
-                    "type": "string"
-                },
-                "mininum": {
-                    "type": "string"
+                "disabled": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"
-                },
-                "provider": {
+                }
+            }
+        },
+        "controllers.viewObject": {
+            "type": "object",
+            "required": [
+                "comment",
+                "name"
+            ],
+            "properties": {
+                "comment": {
                     "type": "string"
                 },
-                "refresh": {
-                    "type": "string"
+                "disabled": {
+                    "type": "boolean"
                 },
-                "retry": {
-                    "type": "string"
+                "id": {
+                    "type": "integer"
                 },
-                "serial": {
-                    "type": "string"
-                },
-                "ttl": {
-                    "type": "string"
-                },
-                "type": {
+                "name": {
                     "type": "string"
                 }
             }
@@ -293,12 +252,18 @@ var doc = `{
         "models.View": {
             "type": "object",
             "required": [
-                "email",
+                "comment",
                 "name"
             ],
             "properties": {
-                "email": {
+                "comment": {
                     "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"

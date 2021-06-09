@@ -4,46 +4,50 @@ import "gorm.io/gorm"
 
 type View struct {
 	Model
-	Name string `gorm:"unique;size:16" json:"name" binding:"required"`
-	Comment    string `gorm:"unique;size:128" json:"email" binding:"required"`
-	Disabled   bool   `gorm:"default:False" json:"-"`
+	ID       uint   `gorm:"primarykey" json:"id"`
+	Name     string `gorm:"unique;size:16" json:"name" binding:"required"`
+	Comment  string `gorm:"unique;size:128" json:"comment" binding:"required"`
+	Disabled bool   `gorm:"default:False" json:"disabled"`
 }
 
-//查询视图是否存在
-func CheckView(name string) int {
-	var views View
-	db.Select("id").Where("name=?",name).First(&views)
-	// 视图已存在
-	if views.ID > 0 {
-		return 409
+func (View) TableName() string {
+	return "views"
+}
+
+// CheckViewExist 查询视图是否存在
+// 返回值：view存在返回true，不存在返回false
+func (v View) CheckViewExist(name string) bool {
+	db.Select("id").Where("name=?", name).First(&v)
+	if v.ID > 0 {
+		return true
+	} else {
+		return false
 	}
-	return 200
 }
 
-//新增视图
-func CreateView(data *View) (code int) {
+// CreateView 新增视图
+func CreateView(data *View) (err error) {
 	// 插入视图
-	err := db.Create(&data).Error
-	if err != nil {
-		return 500
+	if err = db.Create(&data).Error; err != nil {
+		return
 	}
-	return 201
+	return nil
 }
 
-// 获取视图列表
+// GetViews 获取视图列表
 // pageNum 当前页数
 // pageSize 页的条数
-func GetUsers(pageSize int, pageNum int )[]View{
+func GetViews(pageSize int, pageNum int) []View {
 	var views []View
-	err = db.Limit(pageSize).Offset((pageNum-1)*pageSize).Find(&views).Error
+	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&views).Error
 	if err != nil && gorm.ErrRecordNotFound != nil {
 		return nil
 	}
 	return views
 }
 
-//编辑视图
-func EditUsers( id int, data *View) int {
+// EditView 编辑视图
+func EditView(id int, data *View) int {
 	var maps = make(map[string]interface{})
 	maps["name"] = data.Name
 	maps["comment"] = data.Comment
@@ -55,9 +59,9 @@ func EditUsers( id int, data *View) int {
 	return 200
 }
 
-//删除视图
+// DeleteView 删除视图
 func DeleteView(id int) int {
-	err = db.Where("id=?",id).Delete(&View{}).Error
+	err = db.Where("id=?", id).Delete(&View{}).Error
 	if err != nil {
 		return 500
 	}

@@ -1,138 +1,69 @@
 definitions:
-  controllers.domainResponse:
+  controllers.errResponse:
     properties:
       code:
         type: integer
-      data:
-        items:
-          $ref: '#/definitions/models.Domain'
-        type: array
-      error:
+      message:
         type: string
     type: object
   controllers.healthResponse:
     type: object
-  controllers.viewResponse:
-    properties:
-      code:
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/models.View'
-        type: array
-      error:
-        type: string
-    type: object
-  models.Domain:
+  controllers.viewCreateForm:
     properties:
       comment:
         type: string
-      contract:
-        type: string
-      expire:
-        type: string
-      mininum:
-        type: string
+      disabled:
+        type: boolean
       name:
-        type: string
-      provider:
-        type: string
-      refresh:
-        type: string
-      retry:
-        type: string
-      serial:
-        type: string
-      ttl:
-        type: string
-      type:
         type: string
     required:
     - comment
-    - contract
-    - expire
-    - mininum
     - name
-    - provider
-    - refresh
-    - retry
-    - serial
-    - ttl
-    - type
     type: object
-  models.View:
+  controllers.viewObject:
     properties:
-      email:
+      comment:
         type: string
+      disabled:
+        type: boolean
+      id:
+        type: integer
       name:
         type: string
     required:
-    - email
+    - comment
+    - name
+    type: object
+  models.View:
+    properties:
+      comment:
+        type: string
+      disabled:
+        type: boolean
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - comment
     - name
     type: object
 info:
   contact: {}
 paths:
-  /api/v1/domains:
-    get:
-      consumes:
-      - application/json
-      description: Get all domains
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.domainResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/controllers.domainResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controllers.domainResponse'
-      summary: Get all domains
-      tags:
-      - Domain
-  /api/v1/records:
-    get:
-      consumes:
-      - application/json
-      description: Get all records
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controllers.viewResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/controllers.viewResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/controllers.viewResponse'
-      summary: Get all records
-      tags:
-      - Record
   /api/v1/views:
     get:
       consumes:
       - application/json
       description: Get all views
       parameters:
-      - description: keyword
+      - description: pagesize
         in: query
-        name: search
+        name: pagesize
         type: string
-      - description: auth header
-        in: header
-        name: Authorization
-        required: true
+      - description: pagenum
+        in: query
+        name: pagenum
         type: string
       produces:
       - application/json
@@ -140,16 +71,56 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.viewResponse'
+            items:
+              $ref: '#/definitions/models.View'
+            type: array
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/controllers.viewResponse'
+            $ref: '#/definitions/controllers.errResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/controllers.viewResponse'
+            $ref: '#/definitions/controllers.errResponse'
       summary: Get all views
+      tags:
+      - View
+    post:
+      consumes:
+      - application/json
+      description: Create a views
+      parameters:
+      - description: 填写视图信息
+        in: body
+        name: viewInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.viewCreateForm'
+          - properties:
+              comment:
+                type: string
+              disabled:
+                type: boolean
+              name:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.viewObject'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a views
       tags:
       - View
   /healthz:

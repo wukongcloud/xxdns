@@ -1,21 +1,37 @@
 package controllers
+
 import (
-	_ "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 	"github.com/wukongcloud/xxdns/models"
 )
 
-type response struct {
-	Code int         `json:"code"`
-	Err  string      `json:"error"`
-	Data interface{} `json:"data"`
+type errResponse struct {
+	Message string `json:"message"`
+	Code    int    `json:"code"`
 }
 
-type viewResponse struct {
-	response
-	Data []models.View
+type viewCreateForm struct {
+	Name     string `json:"name" binding:"required"`
+	Comment  string `json:"comment" binding:"required"`
+	Disabled bool   `json:"disabled"`
 }
 
-type domainResponse struct {
-	response
-	Data []models.Domain
+type viewObject models.View
+
+type viewList []models.View
+
+// response 响应数据
+func response(c *gin.Context, httpCode int, v interface{}) {
+	c.IndentedJSON(httpCode, v)
+}
+
+// responseError 响应错误数据
+func responseError(c *gin.Context, httpCode int, errCode int, err string) {
+	c.IndentedJSON(
+		httpCode,
+		errResponse{
+			Code:    errCode,
+			Message: err,
+		},
+	)
 }
