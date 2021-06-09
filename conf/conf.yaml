@@ -1,0 +1,5 @@
+DBConfig:
+  Host: 127.0.0.1:3306
+  Name: xxdns
+  User: root
+  Password: root

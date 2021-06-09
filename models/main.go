@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/wukongcloud/xxdns/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -14,8 +15,14 @@ var db *gorm.DB
 var err error
 
 func InitDb() {
-	sql := fmt.Sprintf("root:root@(127.0.0.1:3306)/xxdns?charset=utf8&parseTime=True&loc=Local")
-	db, err = gorm.Open(mysql.Open(sql), &gorm.Config{
+	config,err:=utils.ReadConfig()
+	if err!=nil{
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	DSN := fmt.Sprintf("%s:%s@(%s)/%s?charset=utf8&parseTime=True&loc=Local",config.DBUser,config.DBPwd,config.DBHost,config.DBName)
+
+	db, err = gorm.Open(mysql.Open(DSN), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 		SkipDefaultTransaction:                   true,
 		NamingStrategy: schema.NamingStrategy{
