@@ -1,13 +1,16 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	_ "github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
+)
 
 type View struct {
 	Model
-	ID       uint   `gorm:"primarykey" json:"id"`
-	Name     string `gorm:"unique;size:16" json:"name" binding:"required"`
-	Comment  string `gorm:"unique;size:128" json:"comment" binding:"required"`
-	Disabled bool   `gorm:"default:False" json:"disabled"`
+	ID       uint   `gorm:"column:id;primarykey;index;" json:"id"`
+	Name     string `gorm:"column:name;unique;not null;size:32" json:"name" validate:"required"`
+	Comment  string `gorm:"column:comment;size:512" json:"comment"`
+	Disabled bool   `gorm:"column:disabled;default:False" json:"disabled"`
 }
 
 func (View) TableName() string {
@@ -46,6 +49,14 @@ func GetViews(pageSize int, pageNum int) []View {
 	return views
 }
 
+// GetViewById 获取单个视图
+func GetViewById(id int) (view View, err error) {
+	if err = db.Where("id=?", id).First(&view).Error; err != nil {
+		return view, err
+	}
+	return view, err
+}
+
 // EditView 编辑视图
 func EditView(id int, data *View) int {
 	var maps = make(map[string]interface{})
@@ -60,10 +71,10 @@ func EditView(id int, data *View) int {
 }
 
 // DeleteView 删除视图
-func DeleteView(id int) int {
+func DeleteView(id int) (err error) {
 	err = db.Where("id=?", id).Delete(&View{}).Error
 	if err != nil {
-		return 500
+		return err
 	}
-	return 200
+	return nil
 }

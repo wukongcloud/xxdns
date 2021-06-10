@@ -118,6 +118,98 @@
                 }
             }
         },
+        "/api/v1/views/{id}": {
+            "get": {
+                "description": "Get view by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "View"
+                ],
+                "summary": "Get view by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "view id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.viewObject"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Get view by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "View"
+                ],
+                "summary": "Get view by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:400,message:\"bad request\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:404,message:\"record not found\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:404,message:\"server error\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/healthz": {
             "get": {
                 "description": "Get health status",
@@ -211,7 +303,6 @@
         "controllers.viewObject": {
             "type": "object",
             "required": [
-                "comment",
                 "name"
             ],
             "properties": {
@@ -232,7 +323,6 @@
         "models.View": {
             "type": "object",
             "required": [
-                "comment",
                 "name"
             ],
             "properties": {

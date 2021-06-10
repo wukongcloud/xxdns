@@ -31,7 +31,6 @@ definitions:
       name:
         type: string
     required:
-    - comment
     - name
     type: object
   models.View:
@@ -45,7 +44,6 @@ definitions:
       name:
         type: string
     required:
-    - comment
     - name
     type: object
 info:
@@ -121,6 +119,67 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errResponse'
       summary: Create a views
+      tags:
+      - View
+  /api/v1/views/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get view by id
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: '{error:{code:400,message:"bad request"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "404":
+          description: '{error:{code:404,message:"record not found"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: '{error:{code:404,message:"server error"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get view by id
+      tags:
+      - View
+    get:
+      consumes:
+      - application/json
+      description: Get view by id
+      parameters:
+      - description: view id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.viewObject'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get view by id
       tags:
       - View
   /healthz:
