@@ -36,8 +36,7 @@ func InitDb() {
 	}
 
 	// 迁移数据表，在没有数据表结构变更时候，建议注释不执行
-	//_ = db.AutoMigrate(&Article{},&Category{},&User{})
-	_ = db.AutoMigrate(&View{})
+	_ = db.AutoMigrate(&View{},&Acl{})
 
 	sqlDB, _ := db.DB()
 

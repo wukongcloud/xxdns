@@ -61,7 +61,16 @@ func SetupRouter() *gin.Engine {
 			views.GET("", controllers.GetViews)
 			views.GET(":id", controllers.GetViewById)
 			views.POST("", controllers.AddView)
+			views.PUT(":id", controllers.UpdateViewById)
 			views.DELETE(":id", controllers.DeleteView)
+		}
+		acls := v1.Group("acls")
+		{
+			acls.GET("", controllers.GetAcls)
+			acls.GET(":id", controllers.GetAclById)
+			acls.POST("", controllers.AddAcl)
+			acls.PUT(":id", controllers.UpdateAclById)
+			acls.DELETE(":id", controllers.DeleteAcl)
 		}
 		records := v1.Group("records")
 		{

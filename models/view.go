@@ -7,7 +7,7 @@ import (
 
 type View struct {
 	Model
-	ID       uint   `gorm:"column:id;primarykey;index;" json:"id"`
+	ID       int   `gorm:"column:id;primarykey;index;" json:"id"`
 	Name     string `gorm:"column:name;unique;not null;size:32" json:"name" validate:"required"`
 	Comment  string `gorm:"column:comment;size:512" json:"comment"`
 	Disabled bool   `gorm:"column:disabled;default:False" json:"disabled"`
@@ -58,22 +58,28 @@ func GetViewById(id int) (view View, err error) {
 }
 
 // EditView 编辑视图
-func EditView(id int, data *View) int {
+func EditView(id int, data *View) (err error) {
 	var maps = make(map[string]interface{})
 	maps["name"] = data.Name
 	maps["comment"] = data.Comment
 
-	err = db.Where("id=?", id).Model(&View{}).Updates(maps).Error
-	if err != nil {
-		return 500
+	if err = db.Where("id=?", id).Model(&View{}).Updates(maps).Error; err != nil {
+		return err
 	}
-	return 200
+	return nil
 }
 
 // DeleteView 删除视图
 func DeleteView(id int) (err error) {
 	err = db.Where("id=?", id).Delete(&View{}).Error
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateViewById(id int, v interface{}) (err error) {
+	if err = db.Model(&View{}).Where("id = ?", id).Updates(v).Error;err !=nil{
 		return err
 	}
 	return nil

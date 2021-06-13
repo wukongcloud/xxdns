@@ -1,4 +1,18 @@
 definitions:
+  controllers.aclCreateForm:
+    properties:
+      comment:
+        type: string
+      disabled:
+        type: boolean
+      name:
+        type: string
+      path:
+        type: string
+    required:
+    - name
+    - path
+    type: object
   controllers.errResponse:
     properties:
       code:
@@ -17,10 +31,9 @@ definitions:
       name:
         type: string
     required:
-    - comment
     - name
     type: object
-  controllers.viewObject:
+  models.Acl:
     properties:
       comment:
         type: string
@@ -30,8 +43,11 @@ definitions:
         type: integer
       name:
         type: string
+      path:
+        type: string
     required:
     - name
+    - path
     type: object
   models.View:
     properties:
@@ -49,6 +65,178 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/acls:
+    get:
+      consumes:
+      - application/json
+      description: Get all ACLs
+      parameters:
+      - description: pagesize
+        in: query
+        name: pagesize
+        type: string
+      - description: pagenum
+        in: query
+        name: pagenum
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Acl'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get all ACLs
+      tags:
+      - Acl
+    post:
+      consumes:
+      - application/json
+      description: Create a acl
+      parameters:
+      - description: 填写ACL信息
+        in: body
+        name: AclInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.aclCreateForm'
+          - properties:
+              comment:
+                type: string
+              disabled:
+                type: boolean
+              name:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Acl'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a acl
+      tags:
+      - Acl
+  /api/v1/acls/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get acl by id
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: '{error:{code:400,message:"bad request"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "404":
+          description: '{error:{code:404,message:"record not found"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: '{error:{code:404,message:"server error"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get acl by id
+      tags:
+      - Acl
+    get:
+      consumes:
+      - application/json
+      description: Get acl by id
+      parameters:
+      - description: acl id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Acl'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get acl by id
+      tags:
+      - Acl
+    put:
+      consumes:
+      - application/json
+      description: Create a acl
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 填写Acl信息
+        in: body
+        name: aclInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.aclCreateForm'
+          - properties:
+              comment:
+                type: string
+              disabled:
+                type: boolean
+              name:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Acl'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a acl
+      tags:
+      - Acl
   /api/v1/views:
     get:
       consumes:
@@ -86,7 +274,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a views
+      description: Create a view
       parameters:
       - description: 填写视图信息
         in: body
@@ -109,7 +297,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/controllers.viewObject'
+            $ref: '#/definitions/models.View'
         "409":
           description: Conflict
           schema:
@@ -118,7 +306,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/controllers.errResponse'
-      summary: Create a views
+      summary: Create a view
       tags:
       - View
   /api/v1/views/{id}:
@@ -170,7 +358,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controllers.viewObject'
+            $ref: '#/definitions/models.View'
         "404":
           description: Not Found
           schema:
@@ -180,6 +368,45 @@ paths:
           schema:
             $ref: '#/definitions/controllers.errResponse'
       summary: Get view by id
+      tags:
+      - View
+    put:
+      consumes:
+      - application/json
+      description: Create a view
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 填写视图信息
+        in: body
+        name: viewInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.viewCreateForm'
+          - properties:
+              comment:
+                type: string
+              disabled:
+                type: boolean
+              name:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.View'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a view
       tags:
       - View
   /healthz:

@@ -17,7 +17,7 @@ import (
 // @Produce  json
 // @Param pagesize query string false "pagesize"
 // @Param pagenum  query string false "pagenum"
-// @Success 200 {object} viewList
+// @Success 200 {object} []models.View
 // @Failure 401 {object} errResponse
 // @Failure 500 {object} errResponse
 // @Router /api/v1/views [get]
@@ -44,7 +44,7 @@ func GetViews(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "view id"
-// @Success 200 {object} viewObject
+// @Success 200 {object} models.View
 // @Failure 404 {object} errResponse
 // @Failure 500 {object} errResponse
 // @Router /api/v1/views/{id} [get]
@@ -73,7 +73,7 @@ func GetViewById(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param viewInfo body viewCreateForm{name=string,comment=string,disabled=bool} true "填写视图信息"
-// @Success 201 {object} viewObject
+// @Success 201 {object} models.View
 // @Failure 409 {object} errResponse
 // @Failure 500 {object} errResponse
 // @Router /api/v1/views [post]
@@ -114,4 +114,41 @@ func DeleteView(c *gin.Context) {
 		return
 	}
 	response(c, http.StatusOK, "ok")
+}
+
+// UpdateViewById godoc
+// @Tags View
+// @Summary Create a view
+// @Description Create a view
+// @Accept  json
+// @Produce  json
+// @Param id path string true "ID"
+// @Param viewInfo body viewCreateForm{name=string,comment=string,disabled=bool} true "填写视图信息"
+// @Success 200 {object} models.View
+// @Failure 500 {object} errResponse
+// @Router /api/v1/views/{id} [put]
+func UpdateViewById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		responseError(c, http.StatusBadRequest, 400, err.Error())
+		return
+	}
+	var data models.View
+	if err = c.ShouldBindJSON(&data); err != nil {
+		responseError(c, http.StatusBadRequest, 400, err.Error())
+		return
+	}
+	data.ID = id
+
+	if _, err := models.GetViewById(id); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			responseError(c, http.StatusNotFound, 404, err.Error())
+			return
+		}
+	}
+	if err := models.UpdateViewById(id, &data); err != nil {
+		responseError(c, http.StatusInternalServerError, 500, err.Error())
+		return
+	}
+	response(c, http.StatusOK, data)
 }

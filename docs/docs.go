@@ -24,6 +24,275 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/acls": {
+            "get": {
+                "description": "Get all ACLs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Acl"
+                ],
+                "summary": "Get all ACLs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "pagesize",
+                        "name": "pagesize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagenum",
+                        "name": "pagenum",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Acl"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a acl",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Acl"
+                ],
+                "summary": "Create a acl",
+                "parameters": [
+                    {
+                        "description": "填写ACL信息",
+                        "name": "AclInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.aclCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Acl"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/acls/{id}": {
+            "get": {
+                "description": "Get acl by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Acl"
+                ],
+                "summary": "Get acl by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "acl id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Acl"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Create a acl",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Acl"
+                ],
+                "summary": "Create a acl",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "填写Acl信息",
+                        "name": "aclInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.aclCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Acl"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Get acl by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Acl"
+                ],
+                "summary": "Get acl by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:400,message:\"bad request\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:404,message:\"record not found\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:404,message:\"server error\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/views": {
             "get": {
                 "description": "Get all views",
@@ -76,7 +345,7 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create a views",
+                "description": "Create a view",
                 "consumes": [
                     "application/json"
                 ],
@@ -86,7 +355,7 @@ var doc = `{
                 "tags": [
                     "View"
                 ],
-                "summary": "Create a views",
+                "summary": "Create a view",
                 "parameters": [
                     {
                         "description": "填写视图信息",
@@ -120,7 +389,7 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.viewObject"
+                            "$ref": "#/definitions/models.View"
                         }
                     },
                     "409": {
@@ -164,13 +433,76 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controllers.viewObject"
+                            "$ref": "#/definitions/models.View"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Create a view",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "View"
+                ],
+                "summary": "Create a view",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "填写视图信息",
+                        "name": "viewInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.viewCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.View"
                         }
                     },
                     "500": {
@@ -288,6 +620,27 @@ var doc = `{
         }
     },
     "definitions": {
+        "controllers.aclCreateForm": {
+            "type": "object",
+            "required": [
+                "name",
+                "path"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.errResponse": {
             "type": "object",
             "properties": {
@@ -305,7 +658,6 @@ var doc = `{
         "controllers.viewCreateForm": {
             "type": "object",
             "required": [
-                "comment",
                 "name"
             ],
             "properties": {
@@ -320,10 +672,11 @@ var doc = `{
                 }
             }
         },
-        "controllers.viewObject": {
+        "models.Acl": {
             "type": "object",
             "required": [
-                "name"
+                "name",
+                "path"
             ],
             "properties": {
                 "comment": {
@@ -336,6 +689,9 @@ var doc = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "path": {
                     "type": "string"
                 }
             }
