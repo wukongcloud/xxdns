@@ -22,6 +22,34 @@ definitions:
     type: object
   controllers.healthResponse:
     type: object
+  controllers.recordCreateForm:
+    properties:
+      comment:
+        type: string
+      content:
+        type: string
+      disabled:
+        type: boolean
+      domain:
+        type: string
+      name:
+        type: string
+      priority:
+        type: integer
+      ttl:
+        type: integer
+      type:
+        type: string
+      view:
+        type: string
+    required:
+    - content
+    - domain
+    - name
+    - ttl
+    - type
+    - view
+    type: object
   controllers.viewCreateForm:
     properties:
       comment:
@@ -39,18 +67,66 @@ definitions:
         type: string
       disabled:
         type: boolean
+      filter:
+        type: string
       id:
         type: integer
       name:
         type: string
-      path:
-        type: string
     required:
     - name
-    - path
+    type: object
+  models.IPDB:
+    properties:
+      cidr:
+        type: string
+      comment:
+        type: string
+      country:
+        type: string
+      id:
+        type: integer
+      isp:
+        type: string
+      province:
+        type: string
+    type: object
+  models.Record:
+    properties:
+      comment:
+        type: string
+      content:
+        type: string
+      disabled:
+        type: boolean
+      domain:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      priority:
+        type: integer
+      ttl:
+        type: integer
+      type:
+        type: string
+      view:
+        type: string
+    required:
+    - content
+    - domain
+    - name
+    - ttl
+    - type
+    - view
     type: object
   models.View:
     properties:
+      acls:
+        items:
+          $ref: '#/definitions/models.Acl'
+        type: array
       comment:
         type: string
       disabled:
@@ -110,12 +186,14 @@ paths:
         required: true
         schema:
           allOf:
-          - $ref: '#/definitions/controllers.aclCreateForm'
+          - $ref: '#/definitions/models.Acl'
           - properties:
               comment:
                 type: string
               disabled:
                 type: boolean
+              filter:
+                type: string
               name:
                 type: string
             type: object
@@ -237,6 +315,253 @@ paths:
       summary: Create a acl
       tags:
       - Acl
+  /api/v1/ipdb:
+    get:
+      consumes:
+      - application/json
+      description: Get all IPDB
+      parameters:
+      - description: pagesize
+        in: query
+        name: pagesize
+        type: string
+      - description: pagenum
+        in: query
+        name: pagenum
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.IPDB'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get all IPDB
+      tags:
+      - IPDB
+    post:
+      consumes:
+      - application/json
+      description: Create a ipdb
+      parameters:
+      - description: 填写ip信息
+        in: body
+        name: IPDBInfo
+        required: true
+        schema:
+          $ref: '#/definitions/models.IPDB'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.IPDB'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a ipdb
+      tags:
+      - IPDB
+  /api/v1/records:
+    get:
+      consumes:
+      - application/json
+      description: Get all records
+      parameters:
+      - description: pagesize
+        in: query
+        name: pagesize
+        type: string
+      - description: pagenum
+        in: query
+        name: pagenum
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Record'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get all records
+      tags:
+      - Record
+    post:
+      consumes:
+      - application/json
+      description: Create a record
+      parameters:
+      - description: 填写视图信息
+        in: body
+        name: RecordInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.recordCreateForm'
+          - properties:
+              comment:
+                type: string
+              content:
+                type: string
+              disabled:
+                type: boolean
+              domain:
+                type: string
+              name:
+                type: string
+              type:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Record'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a record
+      tags:
+      - Record
+  /api/v1/records/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get record by id
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: '{error:{code:400,message:"bad request"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "404":
+          description: '{error:{code:404,message:"record not found"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: '{error:{code:404,message:"server error"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get record by id
+      tags:
+      - Record
+    get:
+      consumes:
+      - application/json
+      description: Get record by id
+      parameters:
+      - description: record id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Record'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get record by id
+      tags:
+      - Record
+    put:
+      consumes:
+      - application/json
+      description: Create a record
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 填写视图信息
+        in: body
+        name: RecordInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.recordCreateForm'
+          - properties:
+              comment:
+                type: string
+              content:
+                type: string
+              disabled:
+                type: boolean
+              domain:
+                type: string
+              name:
+                type: string
+              type:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Record'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a record
+      tags:
+      - Record
   /api/v1/views:
     get:
       consumes:

@@ -8,8 +8,8 @@ type Acl struct {
 	Model
 	ID       int    `gorm:"primarykey" json:"id"`
 	Name     string `gorm:"unique;size:16" json:"name" binding:"required"`
-	Path     string `gorm:"unique;size:128" json:"path" binding:"required"`
-	Comment  string `gorm:"size:512" json:"comment"`
+	Filter   string
+	Comment  string `gorm:"size:512" json:"comment,omitempty"`
 	Disabled bool   `gorm:"default:False" json:"disabled"`
 }
 
@@ -43,9 +43,9 @@ func CreateAcl(data *Acl) (err error) {
 func GetAcls(pageSize int, pageNum int) (err error, acls []Acl) {
 	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&acls).Error
 	if err != nil && gorm.ErrRecordNotFound != nil {
-		return err,acls
+		return err, acls
 	}
-	return nil,acls
+	return nil, acls
 }
 
 // GetAclById 获取单个视图

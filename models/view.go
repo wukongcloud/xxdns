@@ -7,10 +7,11 @@ import (
 
 type View struct {
 	Model
-	ID       int   `gorm:"column:id;primarykey;index;" json:"id"`
+	ID       int    `gorm:"column:id;primarykey;index;" json:"id"`
 	Name     string `gorm:"column:name;unique;not null;size:32" json:"name" validate:"required"`
 	Comment  string `gorm:"column:comment;size:512" json:"comment"`
 	Disabled bool   `gorm:"column:disabled;default:False" json:"disabled"`
+	Acls     []Acl  `gorm:"-"`
 }
 
 func (View) TableName() string {
@@ -79,7 +80,7 @@ func DeleteView(id int) (err error) {
 }
 
 func UpdateViewById(id int, v interface{}) (err error) {
-	if err = db.Model(&View{}).Where("id = ?", id).Updates(v).Error;err !=nil{
+	if err = db.Model(&View{}).Where("id = ?", id).Updates(v).Error; err != nil {
 		return err
 	}
 	return nil

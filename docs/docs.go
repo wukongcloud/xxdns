@@ -96,7 +96,7 @@ var doc = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.aclCreateForm"
+                                    "$ref": "#/definitions/models.Acl"
                                 },
                                 {
                                     "type": "object",
@@ -106,6 +106,9 @@ var doc = `{
                                         },
                                         "disabled": {
                                             "type": "boolean"
+                                        },
+                                        "filter": {
+                                            "type": "string"
                                         },
                                         "name": {
                                             "type": "string"
@@ -256,6 +259,389 @@ var doc = `{
                     "Acl"
                 ],
                 "summary": "Get acl by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:400,message:\"bad request\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:404,message:\"record not found\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:404,message:\"server error\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/ipdb": {
+            "get": {
+                "description": "Get all IPDB",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IPDB"
+                ],
+                "summary": "Get all IPDB",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "pagesize",
+                        "name": "pagesize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagenum",
+                        "name": "pagenum",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.IPDB"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a ipdb",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IPDB"
+                ],
+                "summary": "Create a ipdb",
+                "parameters": [
+                    {
+                        "description": "填写ip信息",
+                        "name": "IPDBInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.IPDB"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.IPDB"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/records": {
+            "get": {
+                "description": "Get all records",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Record"
+                ],
+                "summary": "Get all records",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "pagesize",
+                        "name": "pagesize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagenum",
+                        "name": "pagenum",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Record"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Record"
+                ],
+                "summary": "Create a record",
+                "parameters": [
+                    {
+                        "description": "填写视图信息",
+                        "name": "RecordInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.recordCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "content": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "domain": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Record"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/records/{id}": {
+            "get": {
+                "description": "Get record by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Record"
+                ],
+                "summary": "Get record by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "record id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Record"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Create a record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Record"
+                ],
+                "summary": "Create a record",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "填写视图信息",
+                        "name": "RecordInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.recordCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "content": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "domain": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Record"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Get record by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Record"
+                ],
+                "summary": "Get record by id",
                 "parameters": [
                     {
                         "type": "string",
@@ -655,6 +1041,46 @@ var doc = `{
         "controllers.healthResponse": {
             "type": "object"
         },
+        "controllers.recordCreateForm": {
+            "type": "object",
+            "required": [
+                "content",
+                "domain",
+                "name",
+                "ttl",
+                "type",
+                "view"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "ttl": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "view": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.viewCreateForm": {
             "type": "object",
             "required": [
@@ -675,8 +1101,7 @@ var doc = `{
         "models.Acl": {
             "type": "object",
             "required": [
-                "name",
-                "path"
+                "name"
             ],
             "properties": {
                 "comment": {
@@ -685,13 +1110,79 @@ var doc = `{
                 "disabled": {
                     "type": "boolean"
                 },
+                "filter": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.IPDB": {
+            "type": "object",
+            "properties": {
+                "cidr": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isp": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Record": {
+            "type": "object",
+            "required": [
+                "content",
+                "domain",
+                "name",
+                "ttl",
+                "type",
+                "view"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "domain": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
                 "name": {
                     "type": "string"
                 },
-                "path": {
+                "priority": {
+                    "type": "integer"
+                },
+                "ttl": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "view": {
                     "type": "string"
                 }
             }
@@ -702,6 +1193,12 @@ var doc = `{
                 "name"
             ],
             "properties": {
+                "acls": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Acl"
+                    }
+                },
                 "comment": {
                     "type": "string"
                 },

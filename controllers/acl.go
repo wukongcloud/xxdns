@@ -33,10 +33,10 @@ func GetAcls(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = 1
 	}
-	if err,data := models.GetAcls(pageSize, pageNum);err !=nil{
-		responseError(c,http.StatusInternalServerError,5000,err.Error())
+	if err, data := models.GetAcls(pageSize, pageNum); err != nil {
+		responseError(c, http.StatusInternalServerError, 5000, err.Error())
 		return
-	}else {
+	} else {
 		response(c, http.StatusOK, data)
 	}
 }
@@ -76,7 +76,7 @@ func GetAclById(c *gin.Context) {
 // @Description Create a acl
 // @Accept  json
 // @Produce  json
-// @Param AclInfo body aclCreateForm{name=string,comment=string,disabled=bool} true "填写ACL信息"
+// @Param AclInfo body models.Acl{name=string,filter=string,comment=string,disabled=bool} true "填写ACL信息"
 // @Success 201 {object} models.Acl
 // @Failure 409 {object} errResponse
 // @Failure 500 {object} errResponse

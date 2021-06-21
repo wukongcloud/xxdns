@@ -75,6 +75,15 @@ func SetupRouter() *gin.Engine {
 		records := v1.Group("records")
 		{
 			records.GET("", controllers.GetRecords)
+			records.GET(":id", controllers.GetRecordById)
+			records.POST("", controllers.AddRecord)
+			records.PUT(":id", controllers.UpdateRecordById)
+			records.DELETE(":id", controllers.DeleteRecord)
+		}
+		ipdb := v1.Group("ipdb")
+		{
+			ipdb.POST("", controllers.AddIPDB)
+			ipdb.GET("", controllers.GetIPDB)
 		}
 		//auth := v1.Group("auth")
 		//{
@@ -85,4 +94,3 @@ func SetupRouter() *gin.Engine {
 
 	return router
 }
-
