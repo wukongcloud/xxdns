@@ -16,8 +16,8 @@ func (Server) TableName() string {
 	return "views"
 }
 
-// CheckServerExist 查询视图是否存在
-// 返回值：view存在返回true，不存在返回false
+// CheckServerExist 查询服务器是否存在
+// 返回值：存在返回true，不存在返回false
 func (s Server) CheckServerExist(name string) bool {
 	db.Select("id").Where("name=?", name).First(&s)
 	if s.ID > 0 {

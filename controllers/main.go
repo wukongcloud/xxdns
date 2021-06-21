@@ -30,14 +30,28 @@ type viewCreateForm struct {
 }
 
 type recordCreateForm struct {
-	Domain  string `json:"domain" binding:"required"`
-	View    string `json:"view" binding:"required"`
-	Name    string `json:"name" binding:"required"`
-	Type    string `json:"type" binding:"required"`
-	Content string `json:"content" binding:"required"`
-	TTL     uint   `json:"ttl" binding:"required"`
-	Priority uint `json:"priority"`
+	Domain   string `json:"domain" binding:"required"`
+	View     string `json:"view" binding:"required"`
+	Name     string `json:"name" binding:"required"`
+	Type     string `json:"type" binding:"required"`
+	Content  string `json:"content" binding:"required"`
+	TTL      uint   `json:"ttl" binding:"required"`
+	Priority uint   `json:"priority"`
 	Disabled bool   `json:"disabled"`
+	Comment  string `json:"comment"`
+}
+
+type domainCreateForm struct {
+	Name     string `json:"name" binding:"required"`
+	Type     string `json:"type" binding:"required"`
+	TTL      uint   `json:"ttl" binding:"required"`
+	Provider string `json:"provider" binding:"required"`
+	Contract string `json:"contract" binding:"required"`
+	Serial   uint   `json:"serial" binding:"required"`
+	Refresh  uint   `json:"refresh" binding:"required"`
+	Retry    uint   `json:"retry" binding:"required"`
+	Expire   uint   `json:"expire" binding:"required"`
+	Disabled bool   `json:"disabled" binding:"required"`
 	Comment  string `json:"comment"`
 }
 

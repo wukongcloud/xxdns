@@ -55,6 +55,10 @@ func SetupRouter() *gin.Engine {
 		//domain.Use(middleware.AuthRequired)
 		{
 			domains.GET("", controllers.GetDomains)
+			domains.GET(":id", controllers.GetDomainById)
+			domains.POST("", controllers.AddDomain)
+			domains.PUT(":id", controllers.UpdateDomainById)
+			domains.DELETE(":id", controllers.DeleteDomain)
 		}
 		views := v1.Group("views")
 		{

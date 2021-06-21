@@ -296,6 +296,275 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/domains": {
+            "get": {
+                "description": "Get all domains",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Domain"
+                ],
+                "summary": "Get all domains",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "pagesize",
+                        "name": "pagesize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagenum",
+                        "name": "pagenum",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Domain"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a domain",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Domain"
+                ],
+                "summary": "Create a domain",
+                "parameters": [
+                    {
+                        "description": "填写域名信息",
+                        "name": "domainInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.domainCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Domain"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/domains/{id}": {
+            "get": {
+                "description": "Get domain by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Domain"
+                ],
+                "summary": "Get domain by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "domain id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Domain"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Create a domain",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Domain"
+                ],
+                "summary": "Create a domain",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "填写域名信息",
+                        "name": "domainInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.domainCreateForm"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string"
+                                        },
+                                        "disabled": {
+                                            "type": "boolean"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Domain"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Get domain by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Domain"
+                ],
+                "summary": "Get domain by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{error:{code:400,message:\"bad request\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "{error:{code:404,message:\"record not found\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "{error:{code:404,message:\"server error\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.errResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/ipdb": {
             "get": {
                 "description": "Get all IPDB",
@@ -310,6 +579,24 @@ var doc = `{
                 ],
                 "summary": "Get all IPDB",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "country",
+                        "name": "country",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "province",
+                        "name": "province",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "isp",
+                        "name": "isp",
+                        "in": "query"
+                    },
                     {
                         "type": "string",
                         "description": "pagesize",
@@ -1027,6 +1314,56 @@ var doc = `{
                 }
             }
         },
+        "controllers.domainCreateForm": {
+            "type": "object",
+            "required": [
+                "contract",
+                "disabled",
+                "expire",
+                "name",
+                "provider",
+                "refresh",
+                "retry",
+                "serial",
+                "ttl",
+                "type"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "expire": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "refresh": {
+                    "type": "integer"
+                },
+                "retry": {
+                    "type": "integer"
+                },
+                "serial": {
+                    "type": "integer"
+                },
+                "ttl": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.errResponse": {
             "type": "object",
             "properties": {
@@ -1117,6 +1454,64 @@ var doc = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Domain": {
+            "type": "object",
+            "required": [
+                "comment",
+                "contract",
+                "expire",
+                "mininum",
+                "name",
+                "provider",
+                "refresh",
+                "retry",
+                "serial",
+                "ttl",
+                "type"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "contract": {
+                    "type": "string"
+                },
+                "disabled": {
+                    "type": "boolean"
+                },
+                "expire": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mininum": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "refresh": {
+                    "type": "integer"
+                },
+                "retry": {
+                    "type": "integer"
+                },
+                "serial": {
+                    "type": "integer"
+                },
+                "ttl": {
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "master,slave,hit,forward",
                     "type": "string"
                 }
             }

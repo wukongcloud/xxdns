@@ -16,22 +16,31 @@ func (IPDB) TableName() string {
 	return "ipdb"
 }
 
-
-// CreateIPDB 新增视图
+// CreateIPDB 新增IP地址段
 func CreateIPDB(data *IPDB) (err error) {
-	// 插入视图
+	// 插入IP地址段
 	if err = db.Create(&data).Error; err != nil {
 		return
 	}
 	return nil
 }
 
-// GetIPDB 获取视图列表
+// GetIPDB 获取IP地址段列表
 // pageNum 当前页数
 // pageSize 页的条数
-func GetIPDB(pageSize int, pageNum int) []IPDB {
+func GetIPDB(pageSize int, pageNum int, country string, province string, isp string) []IPDB {
 	var ipdb []IPDB
-	err = db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&ipdb).Error
+	dbIP := db.Model(IPDB{})
+	if country != ""{
+		dbIP.Where("country=?",country)
+	}
+	if province != ""{
+		dbIP.Where("province=?",province)
+	}
+	if isp !=""{
+		dbIP.Where("isp=?",isp)
+	}
+	err = dbIP.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&ipdb).Error
 	if err != nil && gorm.ErrRecordNotFound != nil {
 		return nil
 	}

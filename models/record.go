@@ -24,8 +24,8 @@ func (Record) TableName() string {
 	return "records"
 }
 
-// CheckRecordExist 查询视图是否存在
-// 返回值：view存在返回true，不存在返回false
+// CheckRecordExist 查询记录是否存在
+// 返回值：存在返回true，不存在返回false
 func (r Record) CheckRecordExist(name string) bool {
 	db.Select("id").Where("name=?", name).First(&r)
 	if r.ID > 0 {
@@ -35,16 +35,16 @@ func (r Record) CheckRecordExist(name string) bool {
 	}
 }
 
-// CreateRecord 新增视图
+// CreateRecord 新增记录
 func CreateRecord(data *Record) (err error) {
-	// 插入视图
+	// 插入记录
 	if err = db.Create(&data).Error; err != nil {
 		return
 	}
 	return nil
 }
 
-// GetRecords 获取视图列表
+// GetRecords 获取记录列表
 // pageNum 当前页数
 // pageSize 页的条数
 func GetRecords(pageSize int, pageNum int) []Record {
@@ -56,7 +56,7 @@ func GetRecords(pageSize int, pageNum int) []Record {
 	return records
 }
 
-// GetRecordById 获取单个视图
+// GetRecordById 获取单个记录
 func GetRecordById(id int) (record Record, err error) {
 	if err = db.Where("id=?", id).First(&record).Error; err != nil {
 		return record, err
@@ -64,7 +64,7 @@ func GetRecordById(id int) (record Record, err error) {
 	return record, err
 }
 
-// EditRecord 编辑视图
+// EditRecord 编辑记录
 func EditRecord(id int, data *Record) (err error) {
 	var maps = make(map[string]interface{})
 	maps["name"] = data.Name
@@ -76,7 +76,7 @@ func EditRecord(id int, data *Record) (err error) {
 	return nil
 }
 
-// DeleteRecord 删除视图
+// DeleteRecord 删除记录
 func DeleteRecord(id int) (err error) {
 	err = db.Where("id=?", id).Delete(&Record{}).Error
 	if err != nil {

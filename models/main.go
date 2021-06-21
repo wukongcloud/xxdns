@@ -36,7 +36,13 @@ func InitDb() {
 	}
 
 	// 迁移数据表，在没有数据表结构变更时候，建议注释不执行
-	_ = db.AutoMigrate(&View{},&Acl{},&IPDB{},&Record{})
+	_ = db.AutoMigrate(
+		&IPDB{},
+		&Acl{},
+		&View{},
+		&Domain{},
+		&Record{},
+		)
 
 	sqlDB, _ := db.DB()
 

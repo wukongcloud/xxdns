@@ -13,6 +13,42 @@ definitions:
     - name
     - path
     type: object
+  controllers.domainCreateForm:
+    properties:
+      comment:
+        type: string
+      contract:
+        type: string
+      disabled:
+        type: boolean
+      expire:
+        type: integer
+      name:
+        type: string
+      provider:
+        type: string
+      refresh:
+        type: integer
+      retry:
+        type: integer
+      serial:
+        type: integer
+      ttl:
+        type: integer
+      type:
+        type: string
+    required:
+    - contract
+    - disabled
+    - expire
+    - name
+    - provider
+    - refresh
+    - retry
+    - serial
+    - ttl
+    - type
+    type: object
   controllers.errResponse:
     properties:
       code:
@@ -75,6 +111,48 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  models.Domain:
+    properties:
+      comment:
+        type: string
+      contract:
+        type: string
+      disabled:
+        type: boolean
+      expire:
+        type: integer
+      id:
+        type: integer
+      mininum:
+        type: integer
+      name:
+        type: string
+      provider:
+        type: string
+      refresh:
+        type: integer
+      retry:
+        type: integer
+      serial:
+        type: integer
+      ttl:
+        type: integer
+      type:
+        description: master,slave,hit,forward
+        type: string
+    required:
+    - comment
+    - contract
+    - expire
+    - mininum
+    - name
+    - provider
+    - refresh
+    - retry
+    - serial
+    - ttl
+    - type
     type: object
   models.IPDB:
     properties:
@@ -315,12 +393,196 @@ paths:
       summary: Create a acl
       tags:
       - Acl
+  /api/v1/domains:
+    get:
+      consumes:
+      - application/json
+      description: Get all domains
+      parameters:
+      - description: pagesize
+        in: query
+        name: pagesize
+        type: string
+      - description: pagenum
+        in: query
+        name: pagenum
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Domain'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get all domains
+      tags:
+      - Domain
+    post:
+      consumes:
+      - application/json
+      description: Create a domain
+      parameters:
+      - description: 填写域名信息
+        in: body
+        name: domainInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.domainCreateForm'
+          - properties:
+              comment:
+                type: string
+              disabled:
+                type: boolean
+              name:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Domain'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a domain
+      tags:
+      - Domain
+  /api/v1/domains/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get domain by id
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: '{error:{code:400,message:"bad request"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "404":
+          description: '{error:{code:404,message:"record not found"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: '{error:{code:404,message:"server error"}}'
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get domain by id
+      tags:
+      - Domain
+    get:
+      consumes:
+      - application/json
+      description: Get domain by id
+      parameters:
+      - description: domain id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Domain'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Get domain by id
+      tags:
+      - Domain
+    put:
+      consumes:
+      - application/json
+      description: Create a domain
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 填写域名信息
+        in: body
+        name: domainInfo
+        required: true
+        schema:
+          allOf:
+          - $ref: '#/definitions/controllers.domainCreateForm'
+          - properties:
+              comment:
+                type: string
+              disabled:
+                type: boolean
+              name:
+                type: string
+            type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Domain'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errResponse'
+      summary: Create a domain
+      tags:
+      - Domain
   /api/v1/ipdb:
     get:
       consumes:
       - application/json
       description: Get all IPDB
       parameters:
+      - description: country
+        in: query
+        name: country
+        type: string
+      - description: province
+        in: query
+        name: province
+        type: string
+      - description: isp
+        in: query
+        name: isp
+        type: string
       - description: pagesize
         in: query
         name: pagesize

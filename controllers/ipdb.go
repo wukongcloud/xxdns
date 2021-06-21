@@ -28,13 +28,15 @@ func AddIPDB(c *gin.Context) {
 	response(c, http.StatusCreated, data)
 }
 
-
 // GetIPDB godoc
 // @Tags IPDB
 // @Summary Get all IPDB
 // @Description Get all IPDB
 // @Accept  json
 // @Produce  json
+// @Param country query string false "country"
+// @Param province query string false "province"
+// @Param isp query string false "isp"
 // @Param pagesize query string false "pagesize"
 // @Param pagenum  query string false "pagenum"
 // @Success 200 {object} []models.IPDB
@@ -44,15 +46,18 @@ func AddIPDB(c *gin.Context) {
 func GetIPDB(c *gin.Context) {
 	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
 	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+	country := c.Query("country")
+	province := c.Query("province")
+	isp := c.Query("isp")
 	switch {
-	case pageSize >= 100:
-		pageSize = 100
+	case pageSize >= 200000:
+		pageSize = 200000
 	case pageSize <= 0:
 		pageSize = 10
 	}
 	if pageNum == 0 {
 		pageNum = 1
 	}
-	data := models.GetIPDB(pageSize, pageNum)
+	data := models.GetIPDB(pageSize, pageNum, country, province, isp)
 	response(c, http.StatusOK, data)
 }
