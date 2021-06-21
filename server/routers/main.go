@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
-	"github.com/wukongcloud/xxdns/controllers"
-	"github.com/wukongcloud/xxdns/docs"
+	"github.com/wukongcloud/xxdns/server/controllers"
+	"github.com/wukongcloud/xxdns/server/docs"
 	//"github.com/wukongcloud/xxdns/middleware"
 	"time"
 )

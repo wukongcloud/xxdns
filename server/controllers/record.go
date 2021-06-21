@@ -3,7 +3,7 @@ package controllers
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/wukongcloud/xxdns/models"
+	"github.com/wukongcloud/xxdns/server/models"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"

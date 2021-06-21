@@ -1,0 +1,20 @@
+$ORIGIN .
+$TTL    0
+@     86400 IN SOA      0 0 0 0 0
+@     86400 IN NS     ns1..
+;@     86400 IN NS     ns2..
+ns1   86400 IN A      60.29.244.151
+;ns2   86400 IN A      172.16.42.59
+
+;records  86400 IN A      60.29.244.151
+;ns2   86400 IN A      172.16.42.59
+
+;records
+; 1. main site
+; www 300 IN A 1.1.1.1
+; 2. main site
+img 300 IN A 2.2.2.2
+; 3. main site
+; cdn 300 IN CNAME cdn.baidu.com
+; 4. main site
+@ 300 IN A 8.8.8.8

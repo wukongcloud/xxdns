@@ -3,8 +3,12 @@
 - https://github.com/gin-gonic/gin
 - https://github.com/swaggo/gin-swagger
 
-## how to run
+## Run Server
+```shell
+go run main.go run.server
+```
 
-go mod download
-
-go run main.go
+## Run Agent
+```shell
+go run main.go run.agent
+```
