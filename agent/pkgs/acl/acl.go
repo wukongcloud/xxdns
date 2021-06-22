@@ -60,13 +60,13 @@ func RenderAcl(country string, province string, isp string)(err error) {
 
 	//fmt.Println(aclInfo.Acls)
 
-	aclFileName := fmt.Sprintf("./tmp/%s.cidr", aclName)
+	aclFileName := fmt.Sprintf("agent/tmp/%s.cidr", aclName)
 	f, err := os.OpenFile(aclFileName, os.O_WRONLY|os.O_CREATE, 0644)
 	defer f.Close()
 	if err != nil {
 		return err
 	}
-	t, err := template.ParseFiles("angent/templates/acl.tpl")
+	t, err := template.ParseFiles("agent/templates/acl.tpl")
 	if err != nil {
 		return err
 	}

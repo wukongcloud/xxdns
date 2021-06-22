@@ -11,3 +11,6 @@
 # Executable program
 auth
 bin
+
+# ignore tmp
+agent/tmp/

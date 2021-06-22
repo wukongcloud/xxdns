@@ -36,12 +36,12 @@ func RenderDomain(Server string) (err error) {
 
 	fmt.Println(domainInfo.Domain)
 
-	f, err := os.OpenFile("angent/tmp/db.xxdns.org", os.O_WRONLY|os.O_CREATE, 0644)
+	f, err := os.OpenFile("agent/tmp/db.xxdns.org", os.O_WRONLY|os.O_CREATE, 0644)
 	defer f.Close()
 	if err != nil {
 		return err
 	}
-	t, err := template.ParseFiles("angent/templates/domain.tpl")
+	t, err := template.ParseFiles("agent/templates/domain.tpl")
 	if err != nil {
 		return err
 	}
