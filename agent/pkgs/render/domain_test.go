@@ -24,7 +24,6 @@ var (
 		Disabled: false,
 	}
 	re1 = models.Record{
-
 		ID:       8,
 		Domain:   "Domain",
 		View:     "View",
@@ -37,19 +36,7 @@ var (
 		Comment:  "Comment",
 	}
 
-
 	domainInfo = DomainStruct{}
-
-	acl1= models.IPDB{
-		ID:       0,
-		CIDR:     "11111",
-		Country:  "22222",
-		Province: "33333",
-		ISP:      "44444",
-		Comment:  "55555",
-	}
-
-
 )
 
 
@@ -67,6 +54,6 @@ func TestDomain(t *testing.T) {
 	domainInfo.Domain=domain
 
 	var R=Render{FS: static}
-	R.Domain(domainInfo)
+	R.Domain(domainInfo,"./etc/bind/views")
 
 }

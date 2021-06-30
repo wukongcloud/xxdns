@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"github.com/wukongcloud/xxdns/server/models"
 	"os"
+	"path/filepath"
 	"text/template"
 )
 
-func (m *Render) Acl(country, province, isp string, acls []models.IPDB) (err error) {
+func (m *Render) Acl(country, province, isp, dirPath string, acls []models.IPDB) (err error) {
 	var (
 		aclName string
 	)
@@ -27,9 +28,12 @@ func (m *Render) Acl(country, province, isp string, acls []models.IPDB) (err err
 		aclName,
 		acls,
 	}
-
-	aclFileName := fmt.Sprintf("%s.cidr", aclName)
-	f, err := os.OpenFile(aclFileName, os.O_WRONLY|os.O_CREATE, 0644)
+	err = os.MkdirAll(dirPath, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	aclFileName := fmt.Sprintf("%s.acl", aclName)
+	f, err := os.OpenFile(filepath.Join(dirPath, aclFileName), os.O_WRONLY|os.O_CREATE, 0644)
 	defer f.Close()
 	if err != nil {
 		return err
@@ -39,6 +43,26 @@ func (m *Render) Acl(country, province, isp string, acls []models.IPDB) (err err
 		return err
 	}
 	if err = t.Execute(f, aclInfo); err != nil {
+		return err
+	}
+	return err
+}
+
+func (m *Render) AclHeader(dirPath string, aclList []Acl) (err error) {
+	err = os.MkdirAll(dirPath, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	f, err := os.OpenFile(filepath.Join(dirPath, "acls.conf"), os.O_WRONLY|os.O_CREATE, 0644)
+	defer f.Close()
+	if err != nil {
+		return err
+	}
+	t, err := template.ParseFiles("static/templates/acls.tpl")
+	if err != nil {
+		return err
+	}
+	if err = t.Execute(f, aclList); err != nil {
 		return err
 	}
 	return err

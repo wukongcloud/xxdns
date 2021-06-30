@@ -5,7 +5,6 @@ import (
 	"io/fs"
 )
 
-
 type DomainStruct struct {
 	Domain  models.Domain
 	Records []models.Record
@@ -17,4 +16,10 @@ type AclStruct struct {
 
 type Render struct {
 	FS fs.FS
+}
+
+type Acl struct {
+	CreateTime string
+	UpdateTime string
+	ISP        string
 }
