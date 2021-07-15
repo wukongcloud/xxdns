@@ -1,22 +1,21 @@
 package render
 
 import (
-	"github.com/wukongcloud/xxdns/server/models"
+	"github.com/wukongcloud/xxdns/agent/pkgs/handler/services"
 	"testing"
 	"time"
 )
 
-var R = Render{FS: static}
 
 func TestAcl(t *testing.T) {
-	acl1 := models.IPDB{
+	acl1 := &services.IP{
 		CIDR:     "111",
 		Country:  "111",
 		Province: "111",
 		ISP:      "111",
 		Comment:  "111",
 	}
-	acl2 := models.IPDB{
+	acl2 := &services.IP{
 		CIDR:     "222",
 		Country:  "222",
 		Province: "222",
@@ -24,13 +23,16 @@ func TestAcl(t *testing.T) {
 		Comment:  "222",
 	}
 
-	acls := make([]models.IPDB, 0)
+	acls := make([]*services.IP, 0)
 	acls = append(acls, acl1, acl2)
 
+	var R=NewRender()
 	R.Acl("cn", "hangzhou", "laintong", "./etc/bind/named/acl", acls)
 }
 
 func TestRender_AclHeader(t *testing.T) {
+	var R=NewRender()
+
 	var AclList []Acl
 
 	var Acl1 = Acl{

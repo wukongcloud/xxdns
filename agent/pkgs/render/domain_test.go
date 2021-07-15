@@ -2,13 +2,13 @@ package render
 
 import (
 	"embed"
-	"github.com/wukongcloud/xxdns/server/models"
+	"github.com/wukongcloud/xxdns/agent/pkgs/handler/services"
 	"testing"
 )
 
 
 var (
-	domain = models.Domain{
+	domain = &services.Domain{
 		ID:       1,
 		Name:     "test",
 		Type:     "Type1",
@@ -23,7 +23,7 @@ var (
 		Comment:  "",
 		Disabled: false,
 	}
-	re1 = models.Record{
+	re1 = &services.Record{
 		ID:       8,
 		Domain:   "Domain",
 		View:     "View",
@@ -36,7 +36,7 @@ var (
 		Comment:  "Comment",
 	}
 
-	domainInfo = DomainStruct{}
+	domainInfo = &services.DomainData{}
 )
 
 
@@ -48,12 +48,12 @@ var (
 //go:embed static
 var static embed.FS
 func TestDomain(t *testing.T) {
-	records := make([]models.Record, 0)
+	records := make([]*services.Record, 0)
 	records = append(records, re1)
 	domainInfo.Records=records
 	domainInfo.Domain=domain
 
-	var R=Render{FS: static}
+	var R=NewRender()
 	R.Domain(domainInfo,"./etc/bind/views")
 
 }

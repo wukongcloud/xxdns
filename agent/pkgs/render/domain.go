@@ -2,12 +2,13 @@ package render
 
 import (
 	"fmt"
+	"github.com/wukongcloud/xxdns/agent/pkgs/handler/services"
 	"os"
 	"path/filepath"
 	"text/template"
 )
 
-func (m *Render) Domain(domainInfo DomainStruct, dirPath string) (err error) {
+func (m *Render) Domain(domainInfo *services.DomainData, dirPath string) (err error) {
 	err = os.MkdirAll(dirPath, os.ModePerm)
 	if err != nil {
 		return err

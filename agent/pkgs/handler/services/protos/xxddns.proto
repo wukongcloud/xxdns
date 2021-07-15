@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+option go_package = "./;services";
+
+
+service FlushFile {
+  rpc FlushDomainFile(DomainData) returns (IsFlushed);
+  rpc FlushAclFile(ACLS) returns (IsFlushed);
+
+}
+
+message ACLS {
+  // @inject_tag: json:"name"
+  string Name = 1;
+  // @inject_tag: json:"country"
+  string Country = 2;
+  // @inject_tag: json:"province"
+  string Province = 3;
+  // @inject_tag: json:"isp"
+  string ISP = 4;
+  // @inject_tag: json:"ips"
+  repeated IP IPS = 5;
+
+}
+
+
+message IP{
+  // @inject_tag: json:"id"
+  int32    ID = 1;
+  // @inject_tag: json:"cidr"
+  string CIDR = 2;
+  // @inject_tag: json:"country"
+  string Country = 3;
+  // @inject_tag: json:"province"
+  string Province = 4;
+  // @inject_tag: json:"isp"
+  string ISP = 5;
+  // @inject_tag: json:"comment"
+  string Comment = 6;
+}
+
+
+message Empty{
+}
+message IsFlushed{
+  // @inject_tag: json:"flushed"
+  bool Flushed = 1;
+}
+
+message DomainData{
+  // @inject_tag: json:"domain"
+  Domain Domain = 1;
+  // @inject_tag: json:"records"
+  repeated Record Records = 2;
+}
+message Record{
+  // @inject_tag: json:"count_list"
+  int32 ID = 1;
+  // @inject_tag: json:"domain"
+  string Domain = 2;
+  // @inject_tag: json:"view"
+  string View = 3;
+  // @inject_tag: json:"name"
+  string Name = 4;
+  // @inject_tag: json:"type"
+  string Type = 5;
+  // @inject_tag: json:"content"
+  string Content = 6;
+  // @inject_tag: json:"ttl"
+  int32 TTL = 7;
+  // @inject_tag: json:"priority"
+  int32 Priority = 8;
+  // @inject_tag: json:"disable"
+  bool Disabled = 9;
+  // @inject_tag: json:"comment"
+  string Comment = 10;
+}
+
+
+message Domain{
+  // @inject_tag: json:"id"
+  int32    ID = 1;
+  // @inject_tag: json:"name"
+  string  Name = 2;
+  // @inject_tag: json:"type"
+  string  Type = 3;
+  // @inject_tag: json:"ttl"
+  int32    TTL = 4;
+  // @inject_tag: json:"priority"
+  string  Provider = 5;
+  // @inject_tag: json:"contact"
+  string  Contact = 6;
+  // @inject_tag: json:"serial"
+  int32    Serial = 7;
+  // @inject_tag: json:"refresh"
+  int32    Refresh = 8;
+  // @inject_tag: json:"retry"
+  int32    Retry = 9;
+  // @inject_tag: json:"expire"
+  int32    Expire = 10;
+  // @inject_tag: json:"mini_num"
+  int32    Mininum = 11;
+  // @inject_tag: json:"comment"
+  string  Comment = 12;
+  // @inject_tag: json:"disable"
+  bool    Disabled = 13;
+}

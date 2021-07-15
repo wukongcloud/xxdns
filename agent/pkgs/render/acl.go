@@ -2,13 +2,13 @@ package render
 
 import (
 	"fmt"
-	"github.com/wukongcloud/xxdns/server/models"
+	"github.com/wukongcloud/xxdns/agent/pkgs/handler/services"
 	"os"
 	"path/filepath"
 	"text/template"
 )
 
-func (m *Render) Acl(country, province, isp, dirPath string, acls []models.IPDB) (err error) {
+func (m *Render) Acl(country, province, isp, dirPath string, acls []*services.IP) (err error) {
 	var (
 		aclName string
 	)

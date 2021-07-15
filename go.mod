@@ -11,6 +11,8 @@ require (
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.7.0
+	google.golang.org/grpc v1.27.0
+	google.golang.org/protobuf v1.27.1
 	gorm.io/driver/mysql v1.1.0
 	gorm.io/gorm v1.21.10
 )
